@@ -1,0 +1,5 @@
+{
+  "name": "What is Selling Now?",
+  "description": "An application to discover the top 10-20 trending products in a selected country and year using AI-generated insights based on Google Trends data patterns.",
+  "requestFramePermissions": []
+}
