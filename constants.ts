@@ -27,3 +27,8 @@ export const TIME_RANGES = [
   { name: 'Past 30 Days', code: 'PAST_30_DAYS' },
   { name: 'Past 5 Years', code: 'PAST_5_YEARS' },
 ];
+
+export const LIST_SIZES = [
+  { name: 'Top 10', value: 10 },
+  { name: 'Top 20', value: 20 },
+];

@@ -1,41 +1,45 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { ProductTrend, TrendData, GroundingChunk } from '../types';
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
 
-export const fetchTrendingProducts = async (country: string, category: string, timeRange: string): Promise<TrendData> => {
+export const fetchTrendingProducts = async (country: string, category: string, timeRange: string, listSize: number): Promise<TrendData> => {
   
   const categoryInstruction = category === 'All Categories'
     ? 'across all consumer product categories'
     : `in the '${category}' category`;
+  
+  const numProducts = listSize;
 
   const prompt = `
-    Task: Find the top 10-15 trending consumer products based on Google Trends data and provide a market insight.
-    
+    Task: Generate a list of exactly ${numProducts} high-level trending consumer products based on increasing search interest.
+
     Context:
     - Country: ${country}
     - Time Range: ${timeRange}
     - Category: ${categoryInstruction}
-    - Primary Data Source for Ranking: Your primary analysis for ranking and trend data MUST be based on Google Trends search patterns.
-    - Secondary Data Source for Insight: For the 'insight' field, you can synthesize information from broader market research sources (like Statista, etc.) if needed.
+    - High-Level Rule: Your primary goal is to generate a list of the requested size. Rank the products from most to least trending based on their Trend Score. If you cannot find enough products with a strong upward trend to fill the list, include products with lower or stable trend scores to meet the requested count of ${numProducts}. Data integrity is still crucial: all data, keywords, and product ideas must be strictly relevant to ${country} and not generalized from other regions.
+    - Methodology: Your analysis MUST be based on Google Trends data. First, identify a generic product category that is trending. Then, for each product, calculate a Trend Score. Finally, find specific, underlying search terms (e.g., brand/model names) that show significant search growth and are responsible for the high-level trend.
 
     Output Requirements:
     - Format: Your entire response MUST be a single, valid JSON object. Do not add any text, explanations, or markdown formatting like \`\`\`json before or after the object.
-    - Top-Level Object Structure: The root JSON object must have two keys: "products" (an array of objects) and "insight" (a string).
+    - Top-Level Object Structure: The root JSON object must have one key: "products" (an array of exactly ${numProducts} product objects).
     - Product Object Structure: Each object in the "products" array must have these exact keys:
       "rank": number,
       "productName": string,
-      "growth": number,
-      "trend": string,
-      "trendData": number[],
-      "examples": string[],
-      "suppliers": string[]
+      "trendScore": number,
+      "breakoutKeywords": { "keyword": string, "growth": number }[],
+      "suppliers": string[],
+      "relatedProducts": string[]
     
     Field Instructions:
-    - ALL fields are mandatory. Do not leave any fields null or empty.
+    - ALL fields are mandatory. Do not leave any fields null, empty, or incomplete.
+    - productName: The high-level, generic product name.
+    - trendScore: CRITICAL - This field is absolutely mandatory. Provide a score from 1 to 100 indicating the strength of the product's upward trend. The score MUST be based on Google Trends data over the specified Time Range. It should reflect the trend's velocity (how fast it's growing), recency (is the growth happening now?), and duration. A score of 100 represents an extremely strong, accelerating trend.
+    - breakoutKeywords: An array of 3-5 objects. Each object represents a specific, real search term that is trending. Provide its name ('keyword') and its estimated search 'growth' percentage. These keywords are the evidence for the trend.
     - suppliers: List 2-3 popular online retailers where the products are sold.
-    - trendData: Provide an array of 12 numbers representing search interest over the time period.
-    - insight: Provide a single, concise sentence summarizing the key market trend observed from the results.
+    - relatedProducts: List 2-3 complementary or related products.
     
     Example for the entire JSON output:
     {
@@ -43,14 +47,16 @@ export const fetchTrendingProducts = async (country: string, category: string, t
         {
           "rank": 1,
           "productName": "Portable Projector",
-          "growth": 35,
-          "trend": "Fast Rising",
-          "trendData": [20, 25, 30, 40, 50, 60, 70, 80, 85, 90, 95, 100],
-          "examples": ["Anker Nebula Capsule", "Samsung Freestyle"],
-          "suppliers": ["Amazon", "BestBuy", "Lazada"]
+          "trendScore": 92,
+          "breakoutKeywords": [
+            { "keyword": "Samsung Freestyle Gen 2", "growth": 75 },
+            { "keyword": "Anker Nebula Capsule 3", "growth": 60 },
+            { "keyword": "XGIMI MoGo 2 Pro", "growth": 55 }
+          ],
+          "suppliers": ["Amazon", "Lazada", "Shopee"],
+          "relatedProducts": ["Projector Screen", "Portable Power Station", "Bluetooth Speaker"]
         }
-      ],
-      "insight": "The demand for portable and home entertainment electronics is currently surging in ${country}."
+      ]
     }
 
     Generate the JSON object now.
@@ -89,23 +95,25 @@ export const fetchTrendingProducts = async (country: string, category: string, t
     
     let data;
     try {
-        data = JSON.parse(jsonString) as { products: ProductTrend[], insight: string };
+        data = JSON.parse(jsonString) as { products: ProductTrend[] };
     } catch (parseError) {
         console.error("Failed to parse JSON string:", jsonString);
         throw new Error("The model returned a malformed JSON response.");
     }
 
-
-    if (!data || !Array.isArray(data.products) || typeof data.insight !== 'string') {
+    if (!data || !Array.isArray(data.products)) {
         throw new Error("Parsed data is not in the expected format.");
     }
     
     const sources = response.candidates?.[0]?.groundingMetadata?.groundingChunks ?? [];
 
-    return { products: data.products, sources: sources as GroundingChunk[], insight: data.insight };
+    return { products: data.products, sources: sources as GroundingChunk[] };
     
   } catch (error) {
     console.error("Error fetching or parsing trending products:", error);
+    if (error instanceof Error) {
+        throw error;
+    }
     throw new Error("Failed to get a valid response from the model.");
   }
 };

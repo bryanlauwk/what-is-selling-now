@@ -1,11 +1,16 @@
+
+export interface BreakoutKeyword {
+  keyword: string;
+  growth: number;
+}
+
 export interface ProductTrend {
   rank: number;
   productName: string;
-  growth: number;
-  trend: string;
-  trendData: number[];
-  examples: string[];
+  trendScore: number;
+  breakoutKeywords: BreakoutKeyword[];
   suppliers: string[];
+  relatedProducts: string[];
 }
 
 export interface WebSource {
@@ -20,10 +25,9 @@ export interface GroundingChunk {
 export interface TrendData {
   products: ProductTrend[];
   sources: GroundingChunk[];
-  insight: string;
 }
 
-export type SortableKeys = 'rank' | 'productName' | 'growth';
+export type SortableKeys = 'rank' | 'productName' | 'trendScore';
 
 export interface SortConfig {
   key: SortableKeys;

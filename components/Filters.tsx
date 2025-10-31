@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { COUNTRIES, CATEGORIES, TIME_RANGES } from '../constants';
+import { COUNTRIES, CATEGORIES, TIME_RANGES, LIST_SIZES } from '../constants';
 
 interface FiltersProps {
   country: string;
@@ -8,6 +9,8 @@ interface FiltersProps {
   setCategory: (category: string) => void;
   timeRange: string;
   setTimeRange: (timeRange: string) => void;
+  listSize: number;
+  setListSize: (size: number) => void;
   onFind: () => void;
   isLoading: boolean;
 }
@@ -16,18 +19,19 @@ const Filters: React.FC<FiltersProps> = ({
   country, setCountry,
   category, setCategory,
   timeRange, setTimeRange,
+  listSize, setListSize,
   onFind, isLoading,
 }) => {
   return (
-    <div className="p-4 border-2 border-black">
+    <div className="p-4 border border-gray-500">
       <div className="flex flex-col md:flex-row md:flex-nowrap gap-4 items-end">
         <div className="w-full md:flex-grow">
-          <label htmlFor="country-select" className="block text-sm font-bold font-mono mb-1">Country</label>
+          <label htmlFor="country-select" className="block text-sm font-bold font-mono mb-1 text-gray-400">Country</label>
           <select
             id="country-select"
             value={country}
             onChange={(e) => setCountry(e.target.value)}
-            className="w-full bg-white border border-black rounded-none p-2 focus:outline-none"
+            className="w-full bg-black border border-gray-500 rounded-none p-2 focus:outline-none focus:border-lime-400 text-white"
             disabled={isLoading}
           >
             {COUNTRIES.map((c) => (
@@ -36,12 +40,12 @@ const Filters: React.FC<FiltersProps> = ({
           </select>
         </div>
         <div className="w-full md:flex-grow">
-          <label htmlFor="category-select" className="block text-sm font-bold font-mono mb-1">Category</label>
+          <label htmlFor="category-select" className="block text-sm font-bold font-mono mb-1 text-gray-400">Category</label>
           <select
             id="category-select"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full bg-white border border-black rounded-none p-2 focus:outline-none"
+            className="w-full bg-black border border-gray-500 rounded-none p-2 focus:outline-none focus:border-lime-400 text-white"
             disabled={isLoading}
           >
             {CATEGORIES.map((c) => (
@@ -50,12 +54,12 @@ const Filters: React.FC<FiltersProps> = ({
           </select>
         </div>
         <div className="w-full md:flex-grow">
-          <label htmlFor="timerange-select" className="block text-sm font-bold font-mono mb-1">Time Range</label>
+          <label htmlFor="timerange-select" className="block text-sm font-bold font-mono mb-1 text-gray-400">Time Range</label>
           <select
             id="timerange-select"
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value)}
-            className="w-full bg-white border border-black rounded-none p-2 focus:outline-none"
+            className="w-full bg-black border border-gray-500 rounded-none p-2 focus:outline-none focus:border-lime-400 text-white"
             disabled={isLoading}
           >
             {TIME_RANGES.map((t) => (
@@ -63,13 +67,29 @@ const Filters: React.FC<FiltersProps> = ({
             ))}
           </select>
         </div>
-        <button
-          onClick={onFind}
-          disabled={isLoading}
-          className="w-full md:flex-shrink-0 md:w-auto px-4 py-2 border border-black text-base font-bold rounded-none text-white bg-black hover:bg-gray-800 disabled:bg-gray-500 disabled:cursor-not-allowed"
-        >
-          {isLoading ? 'SEARCHING...' : 'FIND TRENDS'}
-        </button>
+        <div className="w-full md:flex-grow">
+          <label htmlFor="listsize-select" className="block text-sm font-bold font-mono mb-1 text-gray-400">List Size</label>
+          <select
+            id="listsize-select"
+            value={listSize}
+            onChange={(e) => setListSize(Number(e.target.value))}
+            className="w-full bg-black border border-gray-500 rounded-none p-2 focus:outline-none focus:border-lime-400 text-white"
+            disabled={isLoading}
+          >
+            {LIST_SIZES.map((s) => (
+              <option key={s.value} value={s.value}>{s.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="w-full md:w-auto flex-shrink-0 flex gap-2">
+            <button
+              onClick={onFind}
+              disabled={isLoading}
+              className="w-full px-6 py-2 border border-lime-400 text-base font-bold rounded-none text-black bg-lime-400 hover:bg-lime-300 disabled:bg-gray-600 disabled:border-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed"
+            >
+              {isLoading ? 'SEARCHING...' : 'DISCOVER TRENDS'}
+            </button>
+        </div>
       </div>
     </div>
   );
