@@ -13,13 +13,36 @@ export const COUNTRIES = [
 
 export const CATEGORIES = [
   { name: 'All Categories', code: 'ALL' },
-  { name: 'Electronics', code: 'ELECTRONICS' },
-  { name: 'Fashion & Apparel', code: 'FASHION' },
-  { name: 'Home & Kitchen', code: 'HOME_KITCHEN' },
-  { name: 'Health & Beauty', code: 'HEALTH_BEAUTY' },
-  { name: 'Toys & Games', code: 'TOYS_GAMES' },
-  { name: 'FMCG', code: 'FMCG' },
+  {
+    name: '— Physical Products —',
+    options: [
+      { name: 'Electronics', code: 'ELECTRONICS' },
+      { name: 'Fashion & Apparel', code: 'FASHION' },
+      { name: 'Home & Kitchen', code: 'HOME_KITCHEN' },
+      { name: 'Health & Beauty', code: 'HEALTH_BEAUTY' },
+      { name: 'Toys & Games', code: 'TOYS_GAMES' },
+      { name: 'FMCG / CPG', code: 'FMCG' },
+    ]
+  },
+  {
+    name: '— Digital Products —',
+    options: [
+      { name: 'Software & Apps', code: 'SOFTWARE_APPS' },
+      { name: 'Entertainment & Media (e.g., Streaming)', code: 'ENTERTAINMENT_MEDIA' },
+      { name: 'Education & Learning (e.g., Courses)', code: 'EDUCATION_LEARNING' },
+    ]
+  },
+  {
+    name: '— Services —',
+    options: [
+        { name: 'Business & Consulting', code: 'BUSINESS_SERVICES' },
+        { name: 'Marketing & Advertising', code: 'MARKETING_SERVICES' },
+        { name: 'Tech & IT Services', code: 'TECH_SERVICES' },
+        { name: 'Travel & Tourism', code: 'TRAVEL_TOURISM' },
+    ]
+  }
 ];
+
 
 export const TIME_RANGES = [
   { name: 'Past 12 Months', code: 'PAST_12_MONTHS' },
@@ -28,7 +51,10 @@ export const TIME_RANGES = [
   { name: 'Past 5 Years', code: 'PAST_5_YEARS' },
 ];
 
-export const LIST_SIZES = [
-  { name: 'Top 10', value: 10 },
-  { name: 'Top 20', value: 20 },
+export const LOADING_MESSAGES = [
+  "ANALYZING MARKET SIGNALS",
+  "SCANNING GOOGLE TRENDS",
+  "IDENTIFYING BREAKOUT PATTERNS",
+  "GENERATING STRATEGIC INSIGHTS",
+  "COMPILING YOUR BLUEPRINT"
 ];

@@ -23,9 +23,10 @@ export interface GroundingChunk {
 }
 
 export interface StrategicInsights {
+  executiveSummary: string;
   marketInsight: string;
   opportunityGaps: string[];
-  go_to_market_strategy: string[];
+  actionableNextSteps: string[];
 }
 
 export interface TrendData {

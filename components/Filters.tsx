@@ -1,6 +1,7 @@
 
+
 import React from 'react';
-import { COUNTRIES, CATEGORIES, TIME_RANGES, LIST_SIZES } from '../constants';
+import { COUNTRIES, CATEGORIES, TIME_RANGES } from '../constants';
 
 interface FiltersProps {
   country: string;
@@ -9,9 +10,8 @@ interface FiltersProps {
   setCategory: (category: string) => void;
   timeRange: string;
   setTimeRange: (timeRange: string) => void;
-  listSize: number;
-  setListSize: (size: number) => void;
   onFind: () => void;
+  onClear: () => void;
   isLoading: boolean;
 }
 
@@ -19,11 +19,10 @@ const Filters: React.FC<FiltersProps> = ({
   country, setCountry,
   category, setCategory,
   timeRange, setTimeRange,
-  listSize, setListSize,
-  onFind, isLoading,
+  onFind, onClear, isLoading,
 }) => {
   return (
-    <div className="p-4 border border-gray-500">
+    <div className="p-4">
       <div className="flex flex-col md:flex-row md:flex-nowrap gap-4 items-end">
         <div className="w-full md:flex-grow">
           <label htmlFor="country-select" className="block text-sm font-bold font-mono mb-1 text-gray-400">Country</label>
@@ -48,9 +47,21 @@ const Filters: React.FC<FiltersProps> = ({
             className="w-full bg-black border border-gray-500 rounded-none p-2 focus:outline-none focus:border-lime-400 text-white"
             disabled={isLoading}
           >
-            {CATEGORIES.map((c) => (
-              <option key={c.code} value={c.code}>{c.name}</option>
-            ))}
+            {CATEGORIES.map((item, index) => {
+              if ('options' in item && item.options) { // This is a group
+                return (
+                  <optgroup key={index} label={item.name}>
+                    {item.options.map((option) => (
+                      <option key={option.code} value={option.code}>{option.name}</option>
+                    ))}
+                  </optgroup>
+                );
+              }
+              // This is a single option like "All Categories"
+              return (
+                <option key={item.code} value={item.code}>{item.name}</option>
+              );
+            })}
           </select>
         </div>
         <div className="w-full md:flex-grow">
@@ -67,21 +78,14 @@ const Filters: React.FC<FiltersProps> = ({
             ))}
           </select>
         </div>
-        <div className="w-full md:flex-grow">
-          <label htmlFor="listsize-select" className="block text-sm font-bold font-mono mb-1 text-gray-400">List Size</label>
-          <select
-            id="listsize-select"
-            value={listSize}
-            onChange={(e) => setListSize(Number(e.target.value))}
-            className="w-full bg-black border border-gray-500 rounded-none p-2 focus:outline-none focus:border-lime-400 text-white"
-            disabled={isLoading}
-          >
-            {LIST_SIZES.map((s) => (
-              <option key={s.value} value={s.value}>{s.name}</option>
-            ))}
-          </select>
-        </div>
         <div className="w-full md:w-auto flex-shrink-0 flex gap-2">
+            <button
+              onClick={onClear}
+              disabled={isLoading}
+              className="w-full px-6 py-2 border border-gray-500 text-base font-bold rounded-none text-gray-300 bg-transparent hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              CLEAR
+            </button>
             <button
               onClick={onFind}
               disabled={isLoading}
