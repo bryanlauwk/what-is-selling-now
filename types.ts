@@ -22,9 +22,16 @@ export interface GroundingChunk {
   web: WebSource;
 }
 
+export interface StrategicInsights {
+  marketInsight: string;
+  opportunityGaps: string[];
+  go_to_market_strategy: string[];
+}
+
 export interface TrendData {
   products: ProductTrend[];
   sources: GroundingChunk[];
+  insights?: StrategicInsights;
 }
 
 export type SortableKeys = 'rank' | 'productName' | 'trendScore';

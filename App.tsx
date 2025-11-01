@@ -9,6 +9,8 @@ import Filters from './components/Filters';
 import ResultsTable from './components/ResultsTable';
 import Sources from './components/Sources';
 import { ShareIcon, CloseIcon } from './components/icons';
+import BusinessContext from './components/BusinessContext';
+import BusinessInsights from './components/BusinessInsights';
 
 // --- Start of ShareModal Component ---
 interface ShareModalProps {
@@ -99,6 +101,7 @@ const App: React.FC = () => {
   const [category, setCategory] = useState<string>(CATEGORIES[0].code);
   const [timeRange, setTimeRange] = useState<string>(TIME_RANGES[0].code);
   const [listSize, setListSize] = useState<number>(LIST_SIZES[1].value); // Default to 20
+  const [businessDescription, setBusinessDescription] = useState<string>('');
   const [trendData, setTrendData] = useState<TrendData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -176,7 +179,7 @@ const App: React.FC = () => {
     setTrendData(null);
     setSortConfig({ key: 'rank', direction: 'ascending' });
     
-    const cacheKey = JSON.stringify({ country, category, timeRange, listSize });
+    const cacheKey = JSON.stringify({ country, category, timeRange, listSize, businessDescription });
     try {
       const cachedData = sessionStorage.getItem(cacheKey);
       if (cachedData) {
@@ -198,7 +201,7 @@ const App: React.FC = () => {
       const timeRangeName = TIME_RANGES.find(t => t.code === timeRange)?.name || 'Past 12 Months';
       
       setCurrentTimeRangeName(timeRangeName);
-      const data = await fetchTrendingProducts(countryName, categoryName, timeRangeName, listSize);
+      const data = await fetchTrendingProducts(countryName, categoryName, timeRangeName, listSize, businessDescription);
       
       setTrendData(data);
       
@@ -222,7 +225,7 @@ const App: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [country, category, timeRange, listSize]);
+  }, [country, category, timeRange, listSize, businessDescription]);
 
   const handleSort = (key: SortableKeys) => {
     let direction: 'ascending' | 'descending' = 'ascending';
@@ -342,74 +345,88 @@ const App: React.FC = () => {
       <main className="p-4 md:p-8">
         <Header />
         <div className="mt-8">
-          <Filters
-            country={country}
-            setCountry={setCountry}
-            category={category}
-            setCategory={setCategory}
-            timeRange={timeRange}
-            setTimeRange={setTimeRange}
-            listSize={listSize}
-            setListSize={setListSize}
-            onFind={handleFindTrends}
+          <BusinessContext
+            description={businessDescription}
+            setDescription={setBusinessDescription}
             isLoading={isLoading}
           />
 
-          {!isLoading && !error && trendData && (
-            <div className="mt-4 flex justify-end items-center gap-4">
-                <button
-                    onClick={handleShare}
-                    className="flex items-center gap-2 px-4 py-2 border border-gray-500 text-sm font-bold rounded-none text-gray-300 bg-transparent hover:bg-gray-800 disabled:opacity-50"
-                    aria-label="Share results"
-                    disabled={!trendData || trendData.products.length === 0}
-                >
-                    <ShareIcon className="h-4 w-4" />
-                    SHARE
-                </button>
+          <div className="mt-4">
+            <Filters
+              country={country}
+              setCountry={setCountry}
+              category={category}
+              setCategory={setCategory}
+              timeRange={timeRange}
+              setTimeRange={setTimeRange}
+              listSize={listSize}
+              setListSize={setListSize}
+              onFind={handleFindTrends}
+              isLoading={isLoading}
+            />
+          </div>
+
+          <div className="mt-8">
+            {!isLoading && !error && trendData?.insights && (
+              <BusinessInsights insights={trendData.insights} />
+            )}
+
+            {!isLoading && !error && trendData && (
+              <div className="mt-4 flex justify-end items-center gap-4">
+                  <button
+                      onClick={handleShare}
+                      className="flex items-center gap-2 px-4 py-2 border border-gray-500 text-sm font-bold rounded-none text-gray-300 bg-transparent hover:bg-gray-800 disabled:opacity-50"
+                      aria-label="Share results"
+                      disabled={!trendData || trendData.products.length === 0}
+                  >
+                      <ShareIcon className="h-4 w-4" />
+                      SHARE
+                  </button>
+              </div>
+            )}
+
+            <div className="mt-2 border border-gray-700">
+              {isLoading && (
+                <div className="flex flex-col items-center justify-center p-16 text-center">
+                  <h3 className="text-4xl font-mono animate-pulse text-lime-400">GATHERING INSIGHTS...</h3>
+                </div>
+              )}
+
+              {error && (
+                <div className="p-16 text-center text-red-400 font-mono">
+                  <h3 className="text-2xl font-bold">REQUEST FAILED</h3>
+                  <p>{error}</p>
+                </div>
+              )}
+
+              {!isLoading && !error && trendData && sortedProducts.length > 0 && (
+                <ResultsTable 
+                  results={sortedProducts} 
+                  timeRangeName={currentTimeRangeName} 
+                  sortConfig={sortConfig}
+                  onSort={handleSort}
+                  country={country}
+                />
+              )}
+
+              {!isLoading && !error && trendData && trendData.products.length === 0 && (
+                <div className="p-16 text-center font-mono">
+                  <h3 className="text-2xl">NO RESULTS FOUND</h3>
+                  <p className="text-gray-400">Try different filters.</p>
+                </div>
+              )}
+
+              {!isLoading && !error && !trendData && (
+                <div className="p-16 text-center font-mono">
+                  <h3 className="text-2xl">SELECT YOUR CRITERIA TO UNCOVER THE NEXT BIG THING.</h3>
+                </div>
+              )}
             </div>
-          )}
-
-          <div className="mt-2 border border-gray-700">
-            {isLoading && (
-              <div className="flex flex-col items-center justify-center p-16 text-center">
-                <h3 className="text-4xl font-mono animate-pulse text-lime-400">GATHERING INSIGHTS...</h3>
-              </div>
-            )}
-
-            {error && (
-              <div className="p-16 text-center text-red-400 font-mono">
-                <h3 className="text-2xl font-bold">REQUEST FAILED</h3>
-                <p>{error}</p>
-              </div>
-            )}
-
-            {!isLoading && !error && trendData && sortedProducts.length > 0 && (
-              <ResultsTable 
-                results={sortedProducts} 
-                timeRangeName={currentTimeRangeName} 
-                sortConfig={sortConfig}
-                onSort={handleSort}
-                country={country}
-              />
-            )}
-
-            {!isLoading && !error && trendData && trendData.products.length === 0 && (
-              <div className="p-16 text-center font-mono">
-                <h3 className="text-2xl">NO RESULTS FOUND</h3>
-                <p className="text-gray-400">Try different filters.</p>
-              </div>
-            )}
-
-            {!isLoading && !error && !trendData && (
-              <div className="p-16 text-center font-mono">
-                <h3 className="text-2xl">SELECT YOUR CRITERIA TO UNCOVER THE NEXT BIG THING.</h3>
-              </div>
+            
+            {!isLoading && !error && trendData && (
+              <Sources sources={trendData.sources} />
             )}
           </div>
-          
-          {!isLoading && !error && trendData && (
-            <Sources sources={trendData.sources} />
-          )}
         </div>
       </main>
       <ShareModal 

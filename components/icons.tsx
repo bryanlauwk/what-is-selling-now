@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 
 export const SortAscIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
@@ -34,5 +35,23 @@ export const InfoIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 export const CloseIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+);
+
+export const LightbulbIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-11.625 6.01 6.01 0 0 0-1.5-1.5V2.25m0 0V3.75m0-1.5a1.5 1.5 0 0 0-3 0M12 18v-5.25m0 0a6.01 6.01 0 0 1-1.5-11.625 6.01 6.01 0 0 1 1.5-1.5V2.25m0 0V3.75m0-1.5a1.5 1.5 0 0 1 3 0M12 18v-5.25m0 0h-1.5m1.5 0h1.5m-1.5 0v.01" />
+    </svg>
+);
+
+export const TargetIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.832.168-1.18 1.18M21.75 12h-2.25m-1.668 5.832-1.18-1.18M2.25 12h2.25m1.668-5.832 1.18 1.18M4.5 21.75V19.5m5.832.168-1.18-1.18" />
+    </svg>
+);
+
+export const RocketIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.82m5.84-2.56a14.953 14.953 0 0 0-2.58-2.58m-2.58 2.58v4.82a6 6 0 0 1-7.38-5.84h4.82m2.56-5.84a14.953 14.953 0 0 0-2.58 2.58m2.58-2.58h-4.82a6 6 0 0 1 5.84-7.38v4.82m-5.84 2.56a14.953 14.953 0 0 0 2.58 2.58m2.58-2.58v-4.82a6 6 0 0 0-7.38 5.84h4.82m2.56 5.84-2.58 2.58m2.58-2.58 2.58-2.58" />
     </svg>
 );
