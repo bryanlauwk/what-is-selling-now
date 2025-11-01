@@ -106,7 +106,6 @@ const App: React.FC = () => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'rank', direction: 'ascending' });
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareableHtml, setShareableHtml] = useState('');
-  const [isAutoFetching, setIsAutoFetching] = useState(true);
 
   // On initial load, read parameters from URL hash and set state.
   useEffect(() => {
@@ -116,26 +115,17 @@ const App: React.FC = () => {
     const timeRangeParam = hashParams.get('timeRange');
     const listSizeParam = hashParams.get('listSize');
 
-    let hasParams = false;
     if (countryParam && COUNTRIES.some(c => c.code === countryParam)) {
         setCountry(countryParam);
-        hasParams = true;
     }
     if (categoryParam && CATEGORIES.some(c => c.code === categoryParam)) {
         setCategory(categoryParam);
-        hasParams = true;
     }
     if (timeRangeParam && TIME_RANGES.some(t => t.code === timeRangeParam)) {
         setTimeRange(timeRangeParam);
-        hasParams = true;
     }
     if (listSizeParam && LIST_SIZES.some(s => s.value === Number(listSizeParam))) {
         setListSize(Number(listSizeParam));
-        hasParams = true;
-    }
-
-    if (!hasParams) {
-        setIsAutoFetching(false); // No params, so don't auto-fetch.
     }
   }, []);
   
@@ -233,14 +223,6 @@ const App: React.FC = () => {
       setIsLoading(false);
     }
   }, [country, category, timeRange, listSize]);
-
-  // Effect to trigger the fetch if auto-fetching is enabled from URL params.
-  useEffect(() => {
-    if (isAutoFetching) {
-        handleFindTrends();
-        setIsAutoFetching(false); // Ensure this only runs once on load.
-    }
-  }, [isAutoFetching, handleFindTrends]);
 
   const handleSort = (key: SortableKeys) => {
     let direction: 'ascending' | 'descending' = 'ascending';
