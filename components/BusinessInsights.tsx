@@ -12,10 +12,9 @@ const BusinessInsights: React.FC<BusinessInsightsProps> = ({ insights }) => {
 
   return (
     <div className="bg-gray-900/50">
-      <h2 className="text-2xl font-bold font-mono text-fuchsia-300 mb-2 uppercase tracking-widest">Your Strategic Blueprint</h2>
-      <p className="text-gray-400 font-mono text-sm mb-6 leading-relaxed">{insights.executiveSummary}</p>
+      <h2 className="text-2xl font-bold font-mono text-fuchsia-300 mb-6 uppercase tracking-widest">Your Strategic Blueprint</h2>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-6 border-t border-fuchsia-500/30">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         <div className="flex flex-col space-y-4">
           <div className="flex items-center gap-3">
