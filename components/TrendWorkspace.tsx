@@ -6,6 +6,7 @@ import TrendNavigator from './TrendNavigator';
 import TrendDeepDive from './TrendDeepDive';
 import BusinessInsights from './BusinessInsights';
 import { ShareIcon, BackArrowIcon } from './icons';
+import Sources from './Sources';
 
 interface TrendWorkspaceProps {
   trendData: TrendData;
@@ -112,11 +113,15 @@ const TrendWorkspace: React.FC<TrendWorkspaceProps> = ({
             
             <div className="p-4 md:p-6 lg:p-8">
               {activeTab === 'deepDive' && (
-                <TrendDeepDive
-                  trend={selectedTrend}
-                  country={country}
-                  sources={trendData.sources}
-                />
+                <>
+                  <TrendDeepDive
+                    trend={selectedTrend}
+                    country={country}
+                  />
+                   <div className="mt-8 pt-6 border-t border-gray-700">
+                    <Sources sources={trendData.sources} />
+                  </div>
+                </>
               )}
               {activeTab === 'strategy' && trendData.insights && (
                  <BusinessInsights insights={trendData.insights} />

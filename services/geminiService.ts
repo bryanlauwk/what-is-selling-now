@@ -15,18 +15,19 @@ export const fetchTrendingProducts = async (country: string, category: string, t
   const isPersonalized = businessDescription.trim().length > 0;
 
   const genericPrompt = `
-    Task: Generate a list of 10 to 20 high-level trending consumer products or services based on increasing search interest.
+    Task: Generate a list of 20 to 30 high-level trending consumer products or services based on increasing search interest.
 
     Context:
     - Country: ${country}
     - Time Range: ${timeRange}
     - Category: ${categoryInstruction}
-    - High-Level Rule: Your primary goal is to generate a high-quality list, ranked from most to least trending. The list should contain between 10 and 20 items. If you can only find 12 strong trends, return only those 12. Do not pad the list with low-quality results. All data, keywords, and ideas must be strictly relevant to ${country} and not generalized from other regions.
+    - High-Level Rule: Your primary goal is to generate a high-quality list, ranked from most to least trending. The list should contain between 20 and 30 items. If you can only find 22 strong trends, return only those 22. Do not pad the list with low-quality results. All data, keywords, and ideas must be strictly relevant to ${country} and not generalized from other regions.
+    - CRITICAL Ranking & Data Integrity: The ranking of products (from 1 to N) is the most important output of this task. The rank MUST be determined by the 'trendScore'. The product with the highest 'trendScore' MUST be rank 1. The 'trendScore' itself MUST be a holistic measure derived directly from Google Trends data, considering the trend's velocity (rate of growth), search volume acceleration, and breakout potential within the specified time range. Do not use anecdotal evidence or general knowledge. Your credibility depends on the accuracy of this data-driven ranking.
     - Methodology: Your analysis MUST be based on Google Trends data. First, identify a generic product or service category that is trending. Then, for each item, calculate a Trend Score. Finally, find specific, underlying search terms (e.g., brand/model names, specific service providers) that show significant search growth and are responsible for the high-level trend.
 
     Output Requirements:
     - Format: Your entire response MUST be a single, valid JSON object. Do not add any text, explanations, or markdown formatting like \`\`\`json before or after the object.
-    - Top-Level Object Structure: The root JSON object must have one key: "products" (an array of 10 to 20 product/service objects).
+    - Top-Level Object Structure: The root JSON object must have one key: "products" (an array of 20 to 30 product/service objects).
     - Product Object Structure: Each object in the "products" array must have these exact keys:
       "rank": number,
       "productName": string,
@@ -38,7 +39,7 @@ export const fetchTrendingProducts = async (country: string, category: string, t
     Field Instructions:
     - ALL fields are mandatory. Do not leave any fields null, empty, or incomplete.
     - productName: The high-level, generic product or service name.
-    - trendScore": CRITICAL - This field is absolutely mandatory. Provide a score from 1 to 100 indicating the strength of the item's upward trend. The score MUST be based on Google Trends data over the specified Time Range. It should reflect the trend's velocity (how fast it's growing), recency (is the growth happening now?), and duration. A score of 100 represents an extremely strong, accelerating trend.
+    - trendScore": CRITICAL - This field is absolutely mandatory. Provide a score from 1 to 100 indicating the strength of the item's upward trend. The score MUST be based on Google Trends data over the specified Time Range. It should reflect the trend's velocity (how fast it's growing?), recency (is the growth happening now?), and duration. A score of 100 represents an extremely strong, accelerating trend.
     - breakoutKeywords: An array of 3-5 objects. Each object represents a specific, real search term that is trending. Provide its name ('keyword') and its estimated search 'growth' percentage. These keywords are the evidence for the trend.
     - suppliers: List 2-3 popular online retailers or service providers.
     - relatedProducts: List 2-3 complementary or related products/services.
@@ -65,7 +66,7 @@ export const fetchTrendingProducts = async (country: string, category: string, t
   `;
 
   const personalizedPrompt = `
-    Task: Generate a personalized market analysis for a business, including 10-20 relevant trending products/services, strategic insights, opportunity gaps, and actionable next steps.
+    Task: Generate a personalized market analysis for a business, including 20-30 relevant trending products/services, strategic insights, opportunity gaps, and actionable next steps.
 
     Tone and Persona:
     - Adopt the persona of a seasoned, confident market analyst.
@@ -81,13 +82,14 @@ export const fetchTrendingProducts = async (country: string, category: string, t
     Methodology:
     - Your analysis MUST be based on Google Trends data for the specified country and time range.
     - First, understand the user's business.
-    - Second, perform the trend analysis, finding 10 to 20 trends that are RELEVANT to the user's business. Prioritize quality over quantity.
+    - Second, perform the trend analysis, finding 20 to 30 trends that are RELEVANT to the user's business. Prioritize quality over quantity.
+    - CRITICAL Ranking & Data Integrity: The ranking of products (from 1 to N) is the most important output of this task. The rank MUST be determined by the 'trendScore'. The product with the highest 'trendScore' MUST be rank 1. The 'trendScore' itself MUST be a holistic measure derived directly from Google Trends data, considering the trend's velocity (rate of growth), search volume acceleration, and breakout potential within the specified time range. Do not use anecdotal evidence or general knowledge. Your credibility depends on the accuracy of this data-driven ranking.
     - Third, based on the intersection of the user's business and the local trends, generate the strategic insights.
 
     Output Requirements:
     - Format: Your entire response MUST be a single, valid JSON object. Do not add any text, explanations, or markdown formatting like \`\`\`json.
     - Top-Level Object Structure: The root JSON object must have TWO keys: "products" (an array) and "insights" (an object).
-    - "products" Array: An array of 10 to 20 product/service objects, following the original schema (rank, productName, trendScore, breakoutKeywords, suppliers, relatedProducts). These items should be relevant to the user's business.
+    - "products" Array: An array of 20 to 30 product/service objects, following the original schema (rank, productName, trendScore, breakoutKeywords, suppliers, relatedProducts). These items should be relevant to the user's business.
     - "insights" Object: This object must have these exact keys:
       - "executiveSummary": A string (2-3 paragraphs) written in a consultative, narrative-driven tone. It should tell a story, connecting the user's business to the market trends, summarizing key findings, opportunities, and potential risks.
       - "marketInsight": A string (2-3 sentences) summarizing how the user's product/service category is perceived in the target country, mentioning local tastes or competitors.

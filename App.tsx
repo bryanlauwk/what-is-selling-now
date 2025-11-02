@@ -27,7 +27,6 @@ const App: React.FC = () => {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const countryParam = hashParams.get('country');
     const categoryParam = hashParams.get('category');
-    const timeRangeParam = hashParams.get('timeRange');
     const businessDescParam = hashParams.get('businessDescription');
 
     const isCategoryValid = (code: string): boolean => {
@@ -46,9 +45,6 @@ const App: React.FC = () => {
     }
     if (categoryParam && isCategoryValid(categoryParam)) {
         setCategory(categoryParam);
-    }
-    if (timeRangeParam && TIME_RANGES.some(t => t.code === timeRangeParam)) {
-        setTimeRange(timeRangeParam);
     }
     if (businessDescParam) {
         setBusinessDescription(decodeURIComponent(businessDescParam));
@@ -147,7 +143,7 @@ const App: React.FC = () => {
 
       const countryName = COUNTRIES.find(c => c.code === country)?.name || 'the selected country';
       const categoryName = findCategoryName(category);
-      const timeRangeName = TIME_RANGES.find(t => t.code === timeRange)?.name || 'Past 12 Months';
+      const timeRangeName = TIME_RANGES.find(t => t.code === timeRange)?.name || 'Past 90 Days';
       
       const data = await fetchTrendingProducts(countryName, categoryName, timeRangeName, businessDescription);
       
@@ -163,7 +159,6 @@ const App: React.FC = () => {
       const hashParams = new URLSearchParams();
       hashParams.set('country', country);
       hashParams.set('category', category);
-      hashParams.set('timeRange', timeRange);
       if (businessDescription.trim()) {
         hashParams.set('businessDescription', encodeURIComponent(businessDescription));
       }
@@ -180,7 +175,6 @@ const App: React.FC = () => {
   const handleClearFilters = useCallback(() => {
     setCountry(COUNTRIES[0].code);
     setCategory(CATEGORIES[0].code);
-    setTimeRange(TIME_RANGES[0].code);
     setBusinessDescription('');
     setTrendData(null);
     setError(null);
@@ -216,8 +210,6 @@ const App: React.FC = () => {
             setCountry={setCountry}
             category={category}
             setCategory={setCategory}
-            timeRange={timeRange}
-            setTimeRange={setTimeRange}
             onFind={handleFindTrends}
             onClear={handleClearFilters}
             isLoading={isLoading}

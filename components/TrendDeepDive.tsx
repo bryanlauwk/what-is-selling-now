@@ -1,17 +1,15 @@
 
 
 import React from 'react';
-import { ProductTrend, GroundingChunk } from '../types';
+import { ProductTrend } from '../types';
 import { GoogleTrendsIcon, InfoIcon } from './icons';
-import Sources from './Sources';
 
 interface TrendDeepDiveProps {
   trend: ProductTrend | null;
   country: string;
-  sources: GroundingChunk[];
 }
 
-const TrendDeepDive: React.FC<TrendDeepDiveProps> = ({ trend, country, sources }) => {
+const TrendDeepDive: React.FC<TrendDeepDiveProps> = ({ trend, country }) => {
   if (!trend) {
     return (
       <div className="p-8 flex items-center justify-center h-full">
@@ -21,7 +19,7 @@ const TrendDeepDive: React.FC<TrendDeepDiveProps> = ({ trend, country, sources }
   }
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 h-full overflow-y-auto">
+    <div className="p-4 md:p-6 lg:p-8 h-full overflow-y-auto animate-[fadeIn_0.5s_ease-out]">
       <header className="pb-4 border-b border-gray-700">
         <div className="flex items-center gap-3">
           <h2 className="text-2xl md:text-3xl font-bold text-white">{trend.productName}</h2>
@@ -114,11 +112,6 @@ const TrendDeepDive: React.FC<TrendDeepDiveProps> = ({ trend, country, sources }
           </div>
         </div>
       </div>
-      
-      <div className="mt-8 pt-6 border-t border-gray-700">
-         <Sources sources={sources} />
-      </div>
-
     </div>
   );
 };

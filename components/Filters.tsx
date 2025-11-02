@@ -1,15 +1,13 @@
 
 
 import React from 'react';
-import { COUNTRIES, CATEGORIES, TIME_RANGES } from '../constants';
+import { COUNTRIES, CATEGORIES } from '../constants';
 
 interface FiltersProps {
   country: string;
   setCountry: (country: string) => void;
   category: string;
   setCategory: (category: string) => void;
-  timeRange: string;
-  setTimeRange: (timeRange: string) => void;
   onFind: () => void;
   onClear: () => void;
   isLoading: boolean;
@@ -18,7 +16,6 @@ interface FiltersProps {
 const Filters: React.FC<FiltersProps> = ({
   country, setCountry,
   category, setCategory,
-  timeRange, setTimeRange,
   onFind, onClear, isLoading,
 }) => {
   return (
@@ -62,20 +59,6 @@ const Filters: React.FC<FiltersProps> = ({
                 <option key={item.code} value={item.code}>{item.name}</option>
               );
             })}
-          </select>
-        </div>
-        <div className="w-full md:flex-grow">
-          <label htmlFor="timerange-select" className="block text-sm font-bold font-mono mb-1 text-gray-400">Time Range</label>
-          <select
-            id="timerange-select"
-            value={timeRange}
-            onChange={(e) => setTimeRange(e.target.value)}
-            className="w-full bg-black border border-gray-500 rounded-none p-2 focus:outline-none focus:border-lime-400 text-white"
-            disabled={isLoading}
-          >
-            {TIME_RANGES.map((t) => (
-              <option key={t.code} value={t.code}>{t.name}</option>
-            ))}
           </select>
         </div>
         <div className="w-full md:w-auto flex-shrink-0 flex gap-2">

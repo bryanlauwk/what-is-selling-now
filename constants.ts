@@ -45,10 +45,7 @@ export const CATEGORIES = [
 
 
 export const TIME_RANGES = [
-  { name: 'Past 12 Months', code: 'PAST_12_MONTHS' },
   { name: 'Past 90 Days', code: 'PAST_90_DAYS' },
-  { name: 'Past 30 Days', code: 'PAST_30_DAYS' },
-  { name: 'Past 5 Years', code: 'PAST_5_YEARS' },
 ];
 
 export const LOADING_MESSAGES = [
